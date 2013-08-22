@@ -30,7 +30,8 @@ describe Hangman do
   context "user_input" do
       it "user input should accept only alphabet" do
         hangman.guess_input = 'q'
-        expect(hangman.guess_input).match(/^[[:alpha:]]$/)
+        #expect(hangman.guess_input).match(/^[[:alpha:]]$/)
+        expect(hangman.guess_input.match(/^[[:alpha:]]+$/).nil? ).to eq(false)
       end
 
       it "user input should accept only 1 character" do
@@ -39,7 +40,7 @@ describe Hangman do
       end
 
       it "user input should accept multiple characters" do
-        hangman.guess_input = 'elephantisis'
+        hangman.guess_input = 'word'
         expect(hangman.guess_input).to eq('word')
       end
   end
@@ -49,26 +50,38 @@ describe Hangman do
       it"input character should be included in word" do
         # position = 2
         hangman.guess_input = 'e'
-        expect(hangman.word_placeholder[position] = guess_input)
+        hangman.play_game
+        hangman.word_placeholder.index('e').should_not == nil
+        #expect(hangman.word_placeholder[position] = guess_input)
       end
       it "counter should get incremented by no. of times characters present" do
-        expect(hangman.counter = counter + collect)
+        hangman.guess_input = 'e'
+        temp = hangman.counter
+        hangman.play_game
+        (hangman.counter - temp).should == 2
       end
     end
 
     context "for wrong choice" do
       it"input character should not be included in word" do
         hangman.guess_input = 'z'
-        expect(hangman.guess_input).include?('word')
+        expect(hangman.word_placeholder.index('z')).to eq (nil)
       end
       it "missed counter should get incremented by 1" do
-        expect(hangman.missed_counter+=1)
+        hangman.guess_input = 'q'
+        temp = hangman.missed_counter
+        hangman.play_game
+        (hangman.missed_counter - temp).should == 1
       end
     end
 
     context "for repeated characters" do
       it"check if user entered already existing characters" do
-        expect(hangman.repeated_choices).include?('guess_input')
+        #expect(hangman.repeated_choices).include?('guess_input')
+        hangman.guess_input = 'i'
+        temp = hangman.counter
+        hangman.play_game
+        (hangman.counter - temp).should == 2
       end
     end
   end
